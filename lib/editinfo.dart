@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import 'package:form_encryption_flutter/database/dboperate.dart';
 import 'package:form_encryption_flutter/main.dart';
 import 'package:form_encryption_flutter/crypto/cryptojs_aes.dart';
+import 'package:form_encryption_flutter/main.dart';
 
 class EditinfoP extends StatefulWidget {
 
@@ -21,7 +21,7 @@ class _EditinfoPState extends State<EditinfoP> {
 
   bool credValid(String psw, String psw2)
   {
-    if (psw.length>=4 && psw==psw2)
+    if ((psw2.length>=4 && psw==psw2 && psw!=currentPass) || (psw=="" && psw2==currentPass))
     {
       return true;
     }
@@ -37,7 +37,7 @@ class _EditinfoPState extends State<EditinfoP> {
     var en_fnm = encryptAESCryptoJS(fnm.text, "password");
     var en_lnm = encryptAESCryptoJS(lnm.text, "password");
     var en_db = encryptAESCryptoJS(db.text, "password");
-    var en_pw = encryptAESCryptoJS(pw.text, "password");
+    var en_pw = encryptAESCryptoJS(pw2.text, "password");
 
     DBOperate.updateRegData(en_fnm,en_lnm,en_db,en_pw,nodeid);
     print("Updated account");
@@ -57,8 +57,6 @@ class _EditinfoPState extends State<EditinfoP> {
     insertText(currentFname, fnm);
     insertText(currentLname, lnm);
     insertText(currentDob, db);
-    // insertText("SoftwareEngineering", pw);
-    // insertText("SoftwareEngineering", pw2);
   }
 
   @override
@@ -226,7 +224,7 @@ class _EditinfoPState extends State<EditinfoP> {
                         border: InputBorder.none,
                         fillColor: Color(0xffFAF3DD),
                         filled: true,
-                        hintText: 'Confirm password',
+                        hintText: 'Confirm password *',
                         hintStyle: TextStyle(
                           fontSize: 22,
                           fontFamily: 'Nexa',
@@ -246,7 +244,11 @@ class _EditinfoPState extends State<EditinfoP> {
                 ),
                 FlatButton(
                   onPressed: (){
-                    if(credValid(pw.text, pw2.text)) {
+                    var text1="",text2=pw2.text;
+                    if(pw.text.isNotEmpty){
+                      text1=pw.text;
+                    }
+                    if(credValid(text1, text2)) {
                       updtAc();
                       Navigator.of(context).pop();
                       Navigator.pushReplacementNamed(context, '/login');

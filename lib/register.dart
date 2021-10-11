@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:form_encryption_flutter/database/dboperate.dart';
 import 'package:form_encryption_flutter/crypto/cryptojs_aes.dart';
-import 'package:form_encryption_flutter/main.dart';
 
-class RegisterP extends StatelessWidget {
+class RegisterP extends StatefulWidget {
+  @override
+  _RegisterPState createState() => _RegisterPState();
+}
+
+class _RegisterPState extends State<RegisterP> {
   TextEditingController fnm = TextEditingController();
   TextEditingController lnm = TextEditingController();
   TextEditingController mail = TextEditingController();
-  TextEditingController db = TextEditingController();
   TextEditingController reg = TextEditingController();
   TextEditingController pw = TextEditingController();
+  TextEditingController pw2 = TextEditingController();
   TextEditingController gd = TextEditingController();
 
-  //flag is true when no matching phone number in database
   bool flag=true;
   Future<void> credValid(String regg) async
   {
@@ -29,8 +32,8 @@ class RegisterP extends StatelessWidget {
           fnm.clear();
           lnm.clear();
           mail.clear();
-          db.clear();
           pw.clear();
+          pw2.clear();
           gd.clear();
           flag = false;
         }
@@ -39,6 +42,42 @@ class RegisterP extends StatelessWidget {
     // await Future.delayed(Duration(seconds:0),(){
     //   print("Assigned flag = "+flag.toString()+" in line x");
     // });
+  }
+
+  String dateChoice = "Date of Birth *";
+  TextStyle temp = new TextStyle(fontSize: 22, fontFamily: 'Nexa', color: Color(0x884A7C59));
+  DateTime dtTom = DateTime.now().add(const Duration(days: 1));
+  DateTime dtPicked = DateTime.now();
+
+  Future<Null> selectTimPicker(BuildContext context) async {
+    dtPicked = await showDatePicker(
+        context: context,
+        initialDate: dtTom,
+        firstDate: dtTom,
+        lastDate: DateTime(2030),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light().copyWith(
+                // primary: mrkColDrk, //head bar
+                // onPrimary: mrkColLit, //heading text
+                // onSurface: mrkColDrk, //c
+              ),
+            ),
+            child: child,
+          );
+        }
+    );
+    if (dtPicked!=null) {
+      setState(() {
+        temp = new TextStyle(fontSize: 24, fontFamily: 'Righteous', color: Color(0xff4A7C59));
+        String dd, mm, yyyy;
+        dd = dtPicked.day.toString().length<2? "0"+dtPicked.day.toString() : dtPicked.day.toString();
+        mm = dtPicked.month.toString().length<2? "0"+dtPicked.month.toString() : dtPicked.month.toString();
+        yyyy = dtPicked.year.toString().length<2? "0"+dtPicked.year.toString() : dtPicked.year.toString();
+        dateChoice = dd+"/"+mm+"/"+yyyy;
+      });
+    }
   }
 
   @override
@@ -170,28 +209,38 @@ class RegisterP extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20,),
-                    TextField(
-                      controller: db,
-                      maxLength: 10,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: Color(0xffFAF3DD),
-                        filled: true,
-                        hintText: 'Date of Birth *',
-                        hintStyle: TextStyle(
-                          fontSize: 22,
-                          fontFamily: 'Nexa',
-                          color: Color(0x884A7C59),
+                    Container(
+                        // padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        decoration: BoxDecoration(
+                          color: Color(0xffFAF3DD),
+                          // borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      textInputAction: TextInputAction.go,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Righteous',
-                        color: Color(0xff4A7C59),
-                      ),
+                        child: InkWell(
+                          onTap: (){
+                            onTap: selectTimPicker(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(12, 0, 20, 0),
+                            alignment: Alignment.center,
+                            height: 54,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  dateChoice,
+                                  style: temp,
+                                ),
+                                Icon(
+                                  Icons.calendar_today_rounded,
+                                  size: 22,
+                                  color: Color(0x884A7C59),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
                     ),
+                    SizedBox(height: 20,),
                     TextField(
                       controller: gd,
                       // maxLength: 10,
@@ -261,10 +310,34 @@ class RegisterP extends StatelessWidget {
                       ),
                       obscureText: true,
                     ),
+                    TextField(
+                      controller: pw2,
+                      maxLength: 20,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        fillColor: Color(0xffFAF3DD),
+                        filled: true,
+                        hintText: 'Confirm Password *',
+                        hintStyle: TextStyle(
+                          fontSize: 22,
+                          fontFamily: 'Nexa',
+                          color: Color(0x884A7C59),
+                        ),
+                      ),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.go,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: 'Righteous',
+                        color: Color(0xff4A7C59),
+                      ),
+                      obscureText: true,
+                    ),
                     SizedBox(height: 20),
                     RaisedButton(
                       onPressed: () async{
-                        if(reg.text.length==4 && pw.text.length >= 4 && db.text.length!=0 && fnm.text.length!=0){
+                        bool mailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(mail.text);
+                        if(reg.text.length==9 && pw.text.length >= 4 && dateChoice.length!=0 && fnm.text.length!=0 && pw.text==pw2.text && mailValid==true){
                           await credValid(reg.text);
                         }
                         else{
@@ -275,7 +348,7 @@ class RegisterP extends StatelessWidget {
                           var en_fnm = encryptAESCryptoJS(fnm.text, "password");
                           var en_lnm = encryptAESCryptoJS(lnm.text, "password");
                           var en_mail = encryptAESCryptoJS(mail.text, "password");
-                          var en_db = encryptAESCryptoJS(db.text, "password");
+                          var en_db = encryptAESCryptoJS(dateChoice, "password");
                           var en_reg = encryptAESCryptoJS(reg.text, "password");
                           var en_pw = encryptAESCryptoJS(pw.text, "password");
                           var en_gd = encryptAESCryptoJS(gd.text, "password");

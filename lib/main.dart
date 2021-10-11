@@ -427,53 +427,53 @@ class _HomePState extends State<HomeP> {
         alignment: Alignment.topLeft,
         child: FloatingActionButton(
           elevation: 100,
-          // onPressed: (){
-          //   return showDialog(context: context, barrierDismissible: false, builder: (context){
-          //     return AlertDialog(
-          //       title: Text(
-          //         "About the app",
-          //         textAlign: TextAlign.center,
-          //       ),
-          //       titleTextStyle: TextStyle(
-          //         color: Color(0xff4A7C59),
-          //         fontFamily: 'Nexa',
-          //         fontSize: 24,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //       content: SingleChildScrollView(
-          //         child: Text(
-          //           "This is a simulation of form encryption and decryption using AES algorithm.",
-          //           style: TextStyle(
-          //             fontFamily: 'Nexa',
-          //             fontSize: 16,
-          //           ),
-          //           textAlign: TextAlign.justify,
-          //         ),
-          //       ),
-          //       actions: [
-          //         MaterialButton(
-          //           onPressed: (){
-          //             Navigator.of(context).pop();
-          //           },
-          //           child: Text(
-          //             'Close',
-          //             style: TextStyle(
-          //               color: Color(0xff4A7C59),
-          //               fontFamily: 'Nexa',
-          //               fontSize: 20,
-          //               fontWeight: FontWeight.bold,
-          //             ),
-          //           ),
-          //           splashColor: Color(0xff4A7C59),
-          //         )
-          //       ],
-          //       backgroundColor: Color(0xffC8D5B9),
-          //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          //     );
-          //   });
-          // },
+          onPressed: (){
+            return showDialog(context: context, barrierDismissible: false, builder: (context){
+              return AlertDialog(
+                title: Text(
+                  "About",
+                  textAlign: TextAlign.center,
+                ),
+                titleTextStyle: TextStyle(
+                  color: Color(0xff4A7C59),
+                  fontFamily: 'Nexa',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                content: SingleChildScrollView(
+                  child: Text(
+                    "This is a simulation of data form encryption and decryption using AES algorithm synced with Firebase database on the backend.",
+                    style: TextStyle(
+                      fontFamily: 'Nexa',
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                actions: [
+                  MaterialButton(
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Close',
+                      style: TextStyle(
+                        color: Color(0xff4A7C59),
+                        fontFamily: 'Nexa',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    splashColor: Color(0xff4A7C59),
+                  )
+                ],
+                backgroundColor: Color(0xffC8D5B9),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              );
+            });
+          },
 
-
+          /*
           //database handler
           onPressed: (){
             // readData();
@@ -481,6 +481,7 @@ class _HomePState extends State<HomeP> {
             // deleteData();
             // updateData();
           },
+          */
 
           backgroundColor: Color(0x004A7C59),
           // splashColor: Color(0x004A7C59),
@@ -494,8 +495,8 @@ class _HomePState extends State<HomeP> {
       ),
     );
   }
-
-  /*database handler*/
+  /*
+  // database handler
   void readData(){}
 
   void writeData(){
@@ -504,7 +505,7 @@ class _HomePState extends State<HomeP> {
       'fname': encryptAESCryptoJS("Ritwik", "password"),
       'lname': encryptAESCryptoJS("Kundu", "password"),
       'mail': encryptAESCryptoJS("theritwikkundu@gmail.com", "password"),
-      'dob': encryptAESCryptoJS("06/10", "password"),
+      'dob': encryptAESCryptoJS("06/10/1999", "password"),
       'gender': encryptAESCryptoJS("M", "password"),
       'pass': encryptAESCryptoJS("abcd1234", "password"),
     });
@@ -513,4 +514,5 @@ class _HomePState extends State<HomeP> {
 
   void updateData(){}
   void deleteData(){}
+  */
 }
